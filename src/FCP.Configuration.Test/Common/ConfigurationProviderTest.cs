@@ -6,7 +6,7 @@ namespace FCP.Configuration.Test
 {
     public abstract class ConfigurationProviderTest
     {
-        protected abstract IConfigurationProvider GetConfigurationProvider();
+        protected abstract IDistributedConfigurationProvider GetConfigurationProvider();
 
         #region sync test
         [Fact]
@@ -15,15 +15,15 @@ namespace FCP.Configuration.Test
             var configProvider = GetConfigurationProvider();
             var key = Guid.NewGuid().ToString("N");
 
-            var result = configProvider.AddConfiguration(key, "test");
+            var result = configProvider.Add(key, "test");
             Assert.True(result);
 
-            Assert.Equal("test", configProvider.GetConfiguration(key));
+            Assert.Equal("test", configProvider.Get<string>(key));
 
-            result = configProvider.DeleteConfiguration(key);
+            result = configProvider.Delete(key);
             Assert.True(result);
 
-            Assert.Null(configProvider.GetConfiguration(key));
+            Assert.Null(configProvider.Get<string>(key));
         }
         #endregion
 
@@ -34,15 +34,15 @@ namespace FCP.Configuration.Test
             var configProvider = GetConfigurationProvider();
             var key = Guid.NewGuid().ToString("N");
 
-            var result = await configProvider.AddConfigurationAsync(key, "test").ConfigureAwait(false);
+            var result = await configProvider.AddAsync(key, "test").ConfigureAwait(false);
             Assert.True(result);
 
-            Assert.Equal("test", await configProvider.GetConfigurationAsync(key).ConfigureAwait(false));
+            Assert.Equal("test", await configProvider.GetAsync<string>(key).ConfigureAwait(false));
 
-            result = await configProvider.DeleteConfigurationAsync(key).ConfigureAwait(false);
+            result = await configProvider.DeleteAsync(key).ConfigureAwait(false);
             Assert.True(result);
 
-            Assert.Null(await configProvider.GetConfigurationAsync(key).ConfigureAwait(false));
+            Assert.Null(await configProvider.GetAsync<string>(key).ConfigureAwait(false));
         }
         #endregion
     }

@@ -4,9 +4,10 @@ namespace FCP.Configuration.Test
 {
     public class ConsulConfigProviderTest : ConfigurationProviderTest
     {
-        protected override IConfigurationProvider GetConfigurationProvider()
+        protected override IDistributedConfigurationProvider GetConfigurationProvider()
         {
-            return new ConsulConfigurationProvider();
+            //return new ConsulConfigurationProvider();
+            return null;
         }
     }
 }

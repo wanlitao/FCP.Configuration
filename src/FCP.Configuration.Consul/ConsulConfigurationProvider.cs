@@ -5,7 +5,7 @@ using FCP.Util;
 
 namespace FCP.Configuration.Consul
 {
-    public class ConsulConfigurationProvider : IConfigurationProvider
+    public class ConsulConfigurationProvider
     {
         private Uri _apiBaseUri;
 
@@ -27,9 +27,9 @@ namespace FCP.Configuration.Consul
         /// <param name="name">配置名称</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public bool AddConfiguration(string name, string value)
+        public bool Add(string name, string value)
         {
-            return AsyncFuncHelper.RunSync(() => AddConfigurationAsync(name, value));
+            return AsyncFuncHelper.RunSync(() => AddAsync(name, value));
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace FCP.Configuration.Consul
         /// <param name="name">配置名称</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public async Task<bool> AddConfigurationAsync(string name, string value)
+        public async Task<bool> AddAsync(string name, string value)
         {
             if (name.isNullOrEmpty())
                 return false;
@@ -58,9 +58,9 @@ namespace FCP.Configuration.Consul
         /// <param name="name">配置名称</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public bool AddOrUpdateConfiguration(string name, string value)
+        public bool AddOrUpdate(string name, string value)
         {
-            return AsyncFuncHelper.RunSync(() => AddOrUpdateConfigurationAsync(name, value));
+            return AsyncFuncHelper.RunSync(() => AddOrUpdateAsync(name, value));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace FCP.Configuration.Consul
         /// <param name="name">配置名称</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public async Task<bool> AddOrUpdateConfigurationAsync(string name, string value)
+        public async Task<bool> AddOrUpdateAsync(string name, string value)
         {
             if (name.isNullOrEmpty())
                 return false;
@@ -88,9 +88,9 @@ namespace FCP.Configuration.Consul
         /// </summary>
         /// <param name="name">配置名称</param>
         /// <returns></returns>
-        public bool DeleteConfiguration(string name)
+        public bool Delete(string name)
         {
-            return AsyncFuncHelper.RunSync(() => DeleteConfigurationAsync(name));
+            return AsyncFuncHelper.RunSync(() => DeleteAsync(name));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace FCP.Configuration.Consul
         /// </summary>
         /// <param name="name">配置名称</param>
         /// <returns></returns>
-        public async Task<bool> DeleteConfigurationAsync(string name)
+        public async Task<bool> DeleteAsync(string name)
         {
             if (name.isNullOrEmpty())
                 return false;
@@ -117,9 +117,9 @@ namespace FCP.Configuration.Consul
         /// </summary>
         /// <param name="name">配置名称</param>
         /// <returns></returns>
-        public string GetConfiguration(string name)
+        public string Get(string name)
         {
-            return AsyncFuncHelper.RunSync(() => GetConfigurationAsync(name));
+            return AsyncFuncHelper.RunSync(() => GetAsync(name));
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace FCP.Configuration.Consul
         /// </summary>
         /// <param name="name">配置名称</param>
         /// <returns></returns>
-        public async Task<string> GetConfigurationAsync(string name)
+        public async Task<string> GetAsync(string name)
         {
             if (name.isNullOrEmpty())
                 return string.Empty;
@@ -146,9 +146,9 @@ namespace FCP.Configuration.Consul
         /// </summary>
         /// <param name="prefix">配置Key前缀</param>
         /// <returns></returns>
-        public string[] GetConfigurationKeys(string prefix)
+        public string[] GetKeys(string prefix)
         {
-            return AsyncFuncHelper.RunSync(() => GetConfigurationKeysAsync(prefix));
+            return AsyncFuncHelper.RunSync(() => GetKeysAsync(prefix));
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace FCP.Configuration.Consul
         /// </summary>
         /// <param name="prefix">配置Key前缀</param>
         /// <returns></returns>
-        public async Task<string[]> GetConfigurationKeysAsync(string prefix)
+        public async Task<string[]> GetKeysAsync(string prefix)
         {
             if (prefix.isNullOrEmpty())
                 return null;
@@ -176,9 +176,9 @@ namespace FCP.Configuration.Consul
         /// <param name="name">配置名称</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public bool UpdateConfiguration(string name, string value)
+        public bool Update(string name, string value)
         {
-            return AsyncFuncHelper.RunSync(() => UpdateConfigurationAsync(name, value));
+            return AsyncFuncHelper.RunSync(() => UpdateAsync(name, value));
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace FCP.Configuration.Consul
         /// <param name="name">配置名称</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public async Task<bool> UpdateConfigurationAsync(string name, string value)
+        public async Task<bool> UpdateAsync(string name, string value)
         {
             if (name.isNullOrEmpty())
                 return false;

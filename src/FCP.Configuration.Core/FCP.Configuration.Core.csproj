@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncFuncHelper.cs" />
-    <Compile Include="IConfigurationProvider.cs" />
+    <Compile Include="BaseConfigurationProvider.cs" />
+    <Compile Include="BaseDistributedConfigurationProvider.cs" />
+    <Compile Include="Interfaces\IConfigurationProvider.cs" />
+    <Compile Include="Interfaces\IDistributedConfigurationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
