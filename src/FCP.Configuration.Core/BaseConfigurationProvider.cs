@@ -12,8 +12,31 @@ namespace FCP.Configuration
 
         public virtual TValue Get<TValue>(TName name, string region)
         {
-            throw new NotImplementedException();
+            var configEntry = GetConfigEntry<TValue>(name, region);
+
+            if (configEntry != null && configEntry.Name.Equals(name))
+            {
+                return configEntry.Value;
+            }
+            return default(TValue);
         }
+
+        public ConfigEntry<TName, TValue> GetConfigEntry<TValue>(TName name)
+        {
+            return GetConfigEntry<TValue>(name, null);
+        }
+
+        public virtual ConfigEntry<TName, TValue> GetConfigEntry<TValue>(TName name, string region)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            CheckDisposed();
+
+            return GetConfigEntryInternal<TValue>(name, region);
+        }
+
+        protected abstract ConfigEntry<TName, TValue> GetConfigEntryInternal<TValue>(TName name, string region);
         #endregion
 
         #region Get Keys
@@ -47,8 +70,25 @@ namespace FCP.Configuration
 
         public virtual bool Add<TValue>(TName name, TValue value, string region)
         {
-            throw new NotImplementedException();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            var configEntry = new ConfigEntry<TName, TValue>(name, region, value);
+
+            return Add(configEntry);
         }
+
+        public virtual bool Add<TValue>(ConfigEntry<TName, TValue> entry)
+        {
+            if (entry == null)
+                throw new ArgumentNullException(nameof(entry));
+
+            CheckDisposed();
+
+            return AddInternal(entry);
+        }
+
+        protected abstract bool AddInternal<TValue>(ConfigEntry<TName, TValue> entry);
         #endregion
 
         #region Update
@@ -59,8 +99,25 @@ namespace FCP.Configuration
 
         public virtual bool Update<TValue>(TName name, TValue value, string region)
         {
-            throw new NotImplementedException();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            var configEntry = new ConfigEntry<TName, TValue>(name, region, value);
+
+            return Update(configEntry);
         }
+
+        public virtual bool Update<TValue>(ConfigEntry<TName, TValue> entry)
+        {
+            if (entry == null)
+                throw new ArgumentNullException(nameof(entry));
+
+            CheckDisposed();
+
+            return UpdateInternal(entry);
+        }
+
+        protected abstract bool UpdateInternal<TValue>(ConfigEntry<TName, TValue> entry);
         #endregion
 
         #region AddOrUpdate
@@ -71,8 +128,25 @@ namespace FCP.Configuration
 
         public virtual bool AddOrUpdate<TValue>(TName name, TValue value, string region)
         {
-            throw new NotImplementedException();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            var configEntry = new ConfigEntry<TName, TValue>(name, region, value);
+
+            return AddOrUpdate(configEntry);
         }
+
+        public virtual bool AddOrUpdate<TValue>(ConfigEntry<TName, TValue> entry)
+        {
+            if (entry == null)
+                throw new ArgumentNullException(nameof(entry));
+
+            CheckDisposed();
+
+            return AddOrUpdateInternal(entry);
+        }
+
+        protected abstract bool AddOrUpdateInternal<TValue>(ConfigEntry<TName, TValue> entry);
         #endregion
 
         #region Delete

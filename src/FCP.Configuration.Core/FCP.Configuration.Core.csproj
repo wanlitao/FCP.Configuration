@@ -43,6 +43,7 @@
     <Compile Include="AsyncFuncHelper.cs" />
     <Compile Include="BaseConfigurationProvider.cs" />
     <Compile Include="BaseDistributedConfigurationProvider.cs" />
+    <Compile Include="Common\ConfigEntry.cs" />
     <Compile Include="Interfaces\IConfigurationProvider.cs" />
     <Compile Include="Interfaces\IDistributedConfigurationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

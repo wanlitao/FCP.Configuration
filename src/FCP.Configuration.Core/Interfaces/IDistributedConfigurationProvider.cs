@@ -14,6 +14,10 @@ namespace FCP.Configuration
         /// <param name="region">>The config region</param>
         /// <returns></returns>
         Task<TValue> GetAsync<TValue>(string name, string region);
+
+        Task<ConfigEntry<string, TValue>> GetConfigEntryAsync<TValue>(string name);
+
+        Task<ConfigEntry<string, TValue>> GetConfigEntryAsync<TValue>(string name, string region);
         #endregion
 
         #region Get Keys
@@ -42,6 +46,8 @@ namespace FCP.Configuration
         /// <param name="region">The config region</param>
         /// <returns></returns>
         Task<bool> AddAsync<TValue>(string name, TValue value, string region);
+
+        Task<bool> AddAsync<TValue>(ConfigEntry<string, TValue> entry);
         #endregion
 
         #region Update
@@ -55,6 +61,8 @@ namespace FCP.Configuration
         /// <param name="region">The config region</param>
         /// <returns></returns>
         Task<bool> UpdateAsync<TValue>(string name, TValue value, string region);
+
+        Task<bool> UpdateAsync<TValue>(ConfigEntry<string, TValue> entry);
         #endregion
 
         #region AddOrUpdate
@@ -68,6 +76,8 @@ namespace FCP.Configuration
         /// <param name="region">The config region</param>
         /// <returns></returns>
         Task<bool> AddOrUpdateAsync<TValue>(string name, TValue value, string region);
+
+        Task<bool> AddOrUpdateAsync<TValue>(ConfigEntry<string, TValue> entry);
         #endregion
 
         #region Delete

@@ -17,6 +17,10 @@ namespace FCP.Configuration
         /// <param name="region">>The config region</param>
         /// <returns></returns>
         TValue Get<TValue>(TName name, string region);
+
+        ConfigEntry<TName, TValue> GetConfigEntry<TValue>(TName name);
+
+        ConfigEntry<TName, TValue> GetConfigEntry<TValue>(TName name, string region);
         #endregion
 
         #region Get Keys
@@ -45,6 +49,8 @@ namespace FCP.Configuration
         /// <param name="region">The config region</param>
         /// <returns></returns>
         bool Add<TValue>(TName name, TValue value, string region);
+
+        bool Add<TValue>(ConfigEntry<TName, TValue> entry);
         #endregion
 
         #region Update
@@ -57,7 +63,9 @@ namespace FCP.Configuration
         /// <param name="value"></param>
         /// <param name="region">The config region</param>
         /// <returns></returns>
-        bool Update<TValue>(TName name, TValue value, string region);       
+        bool Update<TValue>(TName name, TValue value, string region);
+
+        bool Update<TValue>(ConfigEntry<TName, TValue> entry);
         #endregion
 
         #region AddOrUpdate
@@ -71,6 +79,8 @@ namespace FCP.Configuration
         /// <param name="region">The config region</param>
         /// <returns></returns>
         bool AddOrUpdate<TValue>(TName name, TValue value, string region);
+
+        bool AddOrUpdate<TValue>(ConfigEntry<TName, TValue> entry);
         #endregion
 
         #region Delete
