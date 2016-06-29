@@ -6,8 +6,7 @@ namespace FCP.Configuration.Test
     {
         protected override IDistributedConfigurationProvider GetConfigurationProvider()
         {
-            //return new ConsulConfigurationProvider();
-            return null;
+            return new ConsulConfigurationProvider();            
         }
     }
 }

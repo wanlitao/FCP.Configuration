@@ -5,9 +5,10 @@ using FCP.Util;
 
 namespace FCP.Configuration.Consul
 {
-    public class ConsulConfigurationProvider
+    public class ConsulConfigurationProvider : BaseDistributedConfigurationProvider
     {
-        private Uri _apiBaseUri;
+        private readonly Uri _apiBaseUri;
+        private readonly ISerializer _serializer;
 
         #region 构造函数
         public ConsulConfigurationProvider()
@@ -15,192 +16,169 @@ namespace FCP.Configuration.Consul
         { }
 
         public ConsulConfigurationProvider(Uri apiBaseUri)
+            : this(apiBaseUri, SerializerFactory.JsonSerializer)
+        { }
+
+        public ConsulConfigurationProvider(Uri apiBaseUri, ISerializer serializer)
         {
-            _apiBaseUri = apiBaseUri ?? ConsulConstants.DefaultApiBaseUri;
+            if (apiBaseUri == null)
+                throw new ArgumentNullException(nameof(apiBaseUri));
+
+            if (serializer == null)
+                throw new ArgumentNullException(nameof(serializer));
+
+            _apiBaseUri = apiBaseUri;
+            _serializer = serializer;
+        }        
+        #endregion
+
+        #region Name
+        protected string GetEntryName(string name, string region)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            if (string.IsNullOrEmpty(region))
+                return name;
+
+            return string.Format("{0}/{1}", region, name);
+        }
+        #endregion
+
+        #region Serialize
+        protected string ToStringValue<TValue>(TValue value)
+        {
+            return _serializer.SerializeString(value);
+        }
+
+        protected TValue FromStringValue<TValue>(string dataStr)
+        {
+            return _serializer.DeserializeString<TValue>(dataStr);
         }
         #endregion
 
         #region Add
-        /// <summary>
-        /// 添加配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <param name="value">值</param>
-        /// <returns></returns>
-        public bool Add(string name, string value)
+        protected override bool AddInternal<TValue>(ConfigEntry<string, TValue> entry)
         {
-            return AsyncFuncHelper.RunSync(() => AddAsync(name, value));
+            return AsyncFuncHelper.RunSync(() => AddInternalAsync(entry));
         }
 
-        /// <summary>
-        /// 添加配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <param name="value">值</param>
-        /// <returns></returns>
-        public async Task<bool> AddAsync(string name, string value)
+        protected override async Task<bool> AddInternalAsync<TValue>(ConfigEntry<string, TValue> entry)
         {
-            if (name.isNullOrEmpty())
-                return false;
-
             using (var client = new ConsulRsetApiClient(_apiBaseUri))
             {
-                var response = await client.kvPutAsync(name, value, true).ConfigureAwait(false);
+                var fullName = GetEntryName(entry.Name, entry.Region);
+
+                var response = await client.kvPutAsync(fullName, ToStringValue(entry.Value), true).ConfigureAwait(false);
                 return response.ResponseData;
             }
         }
         #endregion
 
-        #region AddOrUpdate
-        /// <summary>
-        /// 保存配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <param name="value">值</param>
-        /// <returns></returns>
-        public bool AddOrUpdate(string name, string value)
+        #region AddOrUpdate        
+
+        protected override bool AddOrUpdateInternal<TValue>(ConfigEntry<string, TValue> entry)
         {
-            return AsyncFuncHelper.RunSync(() => AddOrUpdateAsync(name, value));
+            return AsyncFuncHelper.RunSync(() => AddOrUpdateInternalAsync(entry));
         }
 
-        /// <summary>
-        /// 保存配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <param name="value">值</param>
-        /// <returns></returns>
-        public async Task<bool> AddOrUpdateAsync(string name, string value)
+        protected override async Task<bool> AddOrUpdateInternalAsync<TValue>(ConfigEntry<string, TValue> entry)
         {
-            if (name.isNullOrEmpty())
-                return false;
-
             using (var client = new ConsulRsetApiClient(_apiBaseUri))
             {
-                var response = await client.kvPutAsync(name, value).ConfigureAwait(false);
+                var fullName = GetEntryName(entry.Name, entry.Region);
+
+                var response = await client.kvPutAsync(fullName, ToStringValue(entry.Value)).ConfigureAwait(false);
                 return response.ResponseData;
-            }
+            }            
         }
         #endregion
 
         #region Delete
-        /// <summary>
-        /// 删除配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <returns></returns>
-        public bool Delete(string name)
+        protected override bool DeleteInternal(string name, string region)
         {
-            return AsyncFuncHelper.RunSync(() => DeleteAsync(name));
+            return AsyncFuncHelper.RunSync(() => DeleteInternalAsync(name, region));
         }
 
-        /// <summary>
-        /// 删除配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <returns></returns>
-        public async Task<bool> DeleteAsync(string name)
+        protected override async Task<bool> DeleteInternalAsync(string name, string region)
         {
-            if (name.isNullOrEmpty())
-                return false;
-
             using (var client = new ConsulRsetApiClient(_apiBaseUri))
             {
-                var response = await client.kvDeleteAsync(name).ConfigureAwait(false);
+                var fullName = GetEntryName(name, region);
+
+                var response = await client.kvDeleteAsync(fullName).ConfigureAwait(false);
                 return response.ResponseData;
             }
         }
         #endregion
 
         #region Get
-        /// <summary>
-        /// 查询配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <returns></returns>
-        public string Get(string name)
+        protected override ConfigEntry<string, TValue> GetConfigEntryInternal<TValue>(string name, string region)
         {
-            return AsyncFuncHelper.RunSync(() => GetAsync(name));
+            return AsyncFuncHelper.RunSync(() => GetConfigEntryInternalAsync<TValue>(name, region));
         }
 
-        /// <summary>
-        /// 查询配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <returns></returns>
-        public async Task<string> GetAsync(string name)
+        protected override async Task<ConfigEntry<string, TValue>> GetConfigEntryInternalAsync<TValue>(string name, string region)
         {
-            if (name.isNullOrEmpty())
-                return string.Empty;
-
             using (var client = new ConsulRsetApiClient(_apiBaseUri))
             {
-                var response = await client.kvGetRawAsync(name).ConfigureAwait(false);
-                return response.ResponseData;
-            }
+                var fullName = GetEntryName(name, region);
+                var response = await client.kvGetRawAsync(fullName).ConfigureAwait(false);
+
+                if (response.ResponseData.isNullOrEmpty())
+                    return null;
+
+                var configEntry = new ConfigEntry<string, TValue>(name, region, FromStringValue<TValue>(response.ResponseData));
+                return configEntry;
+            }            
         }
         #endregion
 
         #region Get Keys
-        /// <summary>
-        /// 获取配置Key列表
-        /// </summary>
-        /// <param name="prefix">配置Key前缀</param>
-        /// <returns></returns>
-        public string[] GetKeys(string prefix)
+        protected override string[] GetKeysInternal()
         {
-            return AsyncFuncHelper.RunSync(() => GetKeysAsync(prefix));
+            return AsyncFuncHelper.RunSync(() => GetKeysInternalAsync());
         }
 
-        /// <summary>
-        /// 获取配置Key列表
-        /// </summary>
-        /// <param name="prefix">配置Key前缀</param>
-        /// <returns></returns>
-        public async Task<string[]> GetKeysAsync(string prefix)
+        protected override Task<string[]> GetKeysInternalAsync()
         {
-            if (prefix.isNullOrEmpty())
-                return null;
+            return GetRegionKeysInternalAsync(string.Empty);
+        }
 
+        protected override string[] GetRegionKeysInternal(string region)
+        {
+            return AsyncFuncHelper.RunSync(() => GetRegionKeysInternalAsync(region));
+        }
+
+        protected override async Task<string[]> GetRegionKeysInternalAsync(string region)
+        {
             using (var client = new ConsulRsetApiClient(_apiBaseUri))
             {
-                var response = await client.kvGetKeysAsync(prefix).ConfigureAwait(false);
+                var response = await client.kvGetKeysAsync(region).ConfigureAwait(false);
                 return response.ResponseData;
             }
         }
         #endregion
 
         #region Update
-        /// <summary>
-        /// 更新配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <param name="value">值</param>
-        /// <returns></returns>
-        public bool Update(string name, string value)
+        protected override bool UpdateInternal<TValue>(ConfigEntry<string, TValue> entry)
         {
-            return AsyncFuncHelper.RunSync(() => UpdateAsync(name, value));
+            return AsyncFuncHelper.RunSync(() => UpdateInternalAsync(entry));
         }
 
-        /// <summary>
-        /// 更新配置信息
-        /// </summary>
-        /// <param name="name">配置名称</param>
-        /// <param name="value">值</param>
-        /// <returns></returns>
-        public async Task<bool> UpdateAsync(string name, string value)
+        protected override async Task<bool> UpdateInternalAsync<TValue>(ConfigEntry<string, TValue> entry)
         {
-            if (name.isNullOrEmpty())
-                return false;
-
             using (var client = new ConsulRsetApiClient(_apiBaseUri))
             {
-                var queryResponse = await client.kvGetAsync(name).ConfigureAwait(false);
-                if (queryResponse.ResponseData == null)
-                    return false;  //不存在相应配置信息
+                var fullName = GetEntryName(entry.Name, entry.Region);
 
-                var response = await client.kvPutAsync(name, value).ConfigureAwait(false);
+                var queryResponse = await client.kvGetAsync(fullName).ConfigureAwait(false);
+                if (queryResponse.ResponseData == null)
+                    return false;
+
+                var response = await client.kvPutAsync(fullName, ToStringValue(entry.Value)).ConfigureAwait(false);
                 return response.ResponseData;
-            }
+            }            
         }
         #endregion
     }
