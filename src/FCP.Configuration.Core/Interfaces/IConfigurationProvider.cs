@@ -23,19 +23,19 @@ namespace FCP.Configuration
         ConfigEntry<TName, TValue> GetConfigEntry<TValue>(TName name, string region);
         #endregion
 
-        #region Get Keys
+        #region Get Names
         /// <summary>
-        /// Get Keys
+        /// Get Names
         /// </summary>
         /// <returns></returns>
-        TName[] GetKeys();
+        TName[] GetNames();
 
         /// <summary>
-        /// Get Region Keys
+        /// Get Region Names
         /// </summary>
         /// <param name="region">The config region</param>
         /// <returns></returns>
-        TName[] GetRegionKeys(string region);
+        TName[] GetRegionNames(string region);
         #endregion
 
         #region Add

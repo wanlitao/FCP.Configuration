@@ -40,27 +40,27 @@ namespace FCP.Configuration
         protected abstract Task<ConfigEntry<string, TValue>> GetConfigEntryInternalAsync<TValue>(string name, string region);
         #endregion
 
-        #region Get Keys
-        public virtual Task<string[]> GetKeysAsync()
+        #region Get Names
+        public virtual Task<string[]> GetNamesAsync()
         {
             CheckDisposed();
 
-            return GetKeysInternalAsync();
+            return GetNamesInternalAsync();
         }
 
-        protected abstract Task<string[]> GetKeysInternalAsync();
+        protected abstract Task<string[]> GetNamesInternalAsync();
 
-        public virtual Task<string[]> GetRegionKeysAsync(string region)
+        public virtual Task<string[]> GetRegionNamesAsync(string region)
         {
             if (string.IsNullOrEmpty(region))
                 throw new ArgumentNullException(nameof(region));
 
             CheckDisposed();
 
-            return GetRegionKeysInternalAsync(region);
+            return GetRegionNamesInternalAsync(region);
         }
 
-        protected abstract Task<string[]> GetRegionKeysInternalAsync(string region);
+        protected abstract Task<string[]> GetRegionNamesInternalAsync(string region);
         #endregion
 
         #region Add

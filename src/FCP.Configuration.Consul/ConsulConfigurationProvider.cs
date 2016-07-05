@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Consul.RsetApi.Client;
 using FCP.Util;
+using System.Linq;
 
 namespace FCP.Configuration.Consul
 {
@@ -135,27 +136,35 @@ namespace FCP.Configuration.Consul
         #endregion
 
         #region Get Keys
-        protected override string[] GetKeysInternal()
+        protected override string[] GetNamesInternal()
         {
-            return AsyncFuncHelper.RunSync(() => GetKeysInternalAsync());
+            return AsyncFuncHelper.RunSync(() => GetNamesInternalAsync());
         }
 
-        protected override Task<string[]> GetKeysInternalAsync()
+        protected override Task<string[]> GetNamesInternalAsync()
         {
-            return GetRegionKeysInternalAsync(string.Empty);
+            return GetRegionNamesInternalAsync(string.Empty);
         }
 
-        protected override string[] GetRegionKeysInternal(string region)
+        protected override string[] GetRegionNamesInternal(string region)
         {
-            return AsyncFuncHelper.RunSync(() => GetRegionKeysInternalAsync(region));
+            return AsyncFuncHelper.RunSync(() => GetRegionNamesInternalAsync(region));
         }
 
-        protected override async Task<string[]> GetRegionKeysInternalAsync(string region)
+        protected override async Task<string[]> GetRegionNamesInternalAsync(string region)
         {
             using (var client = new ConsulRsetApiClient(_apiBaseUri))
             {
                 var response = await client.kvGetKeysAsync(region).ConfigureAwait(false);
-                return response.ResponseData;
+                var keys = response.ResponseData;
+
+                //substring the region prefix
+                if (!region.isNullOrEmpty() && keys.isNotEmpty())
+                {
+                    var startIndex = region.Length + 1;
+                    keys = keys.Select(m => m.Substring(startIndex)).ToArray();
+                }
+                return keys;
             }
         }
         #endregion

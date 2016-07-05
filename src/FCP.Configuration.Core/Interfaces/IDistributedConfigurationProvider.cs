@@ -20,19 +20,19 @@ namespace FCP.Configuration
         Task<ConfigEntry<string, TValue>> GetConfigEntryAsync<TValue>(string name, string region);
         #endregion
 
-        #region Get Keys
+        #region Get Names
         /// <summary>
-        /// Get Keys
+        /// Get Names
         /// </summary>
         /// <returns></returns>
-        Task<string[]> GetKeysAsync();
+        Task<string[]> GetNamesAsync();
 
         /// <summary>
-        /// Get Region Keys
+        /// Get Region Names
         /// </summary>
         /// <param name="region">The config region</param>
         /// <returns></returns>
-        Task<string[]> GetRegionKeysAsync(string region);
+        Task<string[]> GetRegionNamesAsync(string region);
         #endregion
 
         #region Add

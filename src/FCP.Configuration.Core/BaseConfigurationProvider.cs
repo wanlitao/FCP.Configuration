@@ -39,27 +39,27 @@ namespace FCP.Configuration
         protected abstract ConfigEntry<TName, TValue> GetConfigEntryInternal<TValue>(TName name, string region);
         #endregion
 
-        #region Get Keys
-        public virtual TName[] GetKeys()
+        #region Get Names
+        public virtual TName[] GetNames()
         {
             CheckDisposed();
 
-            return GetKeysInternal();
+            return GetNamesInternal();
         }
 
-        protected abstract TName[] GetKeysInternal();
+        protected abstract TName[] GetNamesInternal();
 
-        public virtual TName[] GetRegionKeys(string region)
+        public virtual TName[] GetRegionNames(string region)
         {
             if (string.IsNullOrEmpty(region))
                 throw new ArgumentNullException(nameof(region));
 
             CheckDisposed();
 
-            return GetRegionKeysInternal(region);
+            return GetRegionNamesInternal(region);
         }
 
-        protected abstract TName[] GetRegionKeysInternal(string region);
+        protected abstract TName[] GetRegionNamesInternal(string region);
         #endregion
 
         #region Add
