@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncFuncHelper.cs" />
     <Compile Include="BaseConfigurationProvider.cs" />
     <Compile Include="BaseDistributedConfigurationProvider.cs" />
     <Compile Include="Common\ConfigEntry.cs" />

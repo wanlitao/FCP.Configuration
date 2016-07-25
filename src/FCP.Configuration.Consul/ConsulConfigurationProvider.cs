@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Consul.RsetApi.Client;
 using FCP.Util;
 using System.Linq;
+using FCP.Util.Async;
 
 namespace FCP.Configuration.Consul
 {
