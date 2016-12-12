@@ -25,13 +25,13 @@ namespace FCP.Configuration.Cluster
         /// 获取 Consul服务检测间隔 配置
         /// </summary>        
         /// <returns></returns>
-        Task<int> GetConsulCheckIntervalConfigAsync();
+        Task<int> GetConsulCheckIntervalAsync();
 
         /// <summary>
         /// 添加或更新 Consul服务检测间隔 配置
         /// </summary>
         /// <param name="checkInterval">检测间隔</param>
         /// <returns></returns>
-        Task<bool> AddOrUpdateConsulCheckIntervalConfigAsync(int checkInterval);
+        Task<bool> AddOrUpdateConsulCheckIntervalAsync(int checkInterval);
     }
 }

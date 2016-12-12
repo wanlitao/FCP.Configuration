@@ -40,14 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClusterConfigurationProvider.cs" />
     <Compile Include="FCPClusterConfigurationConstants.cs" />
-    <Compile Include="FCPClusterConfigurationProvider.cs" />
-    <Compile Include="Interfaces\IClusterConfigurationProvider.cs" />
     <Compile Include="Interfaces\IConsulOptionsConfigurationProvider.cs" />
     <Compile Include="Interfaces\IServiceConfigurationProvider.cs" />
-    <Compile Include="PartialClass\ConsulOptionsConfigurationProvider.cs" />
-    <Compile Include="PartialClass\ServiceConfigurationProvider.cs" />
+    <Compile Include="Implement\ConsulOptionsConfigurationProvider.cs" />
+    <Compile Include="Implement\ServiceConfigurationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

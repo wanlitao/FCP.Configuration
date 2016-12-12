@@ -4,7 +4,7 @@
     {
         #region Consul配置
         /// <summary>
-        /// Consul 配置前缀
+        /// Consul 配置Region
         /// </summary>
         public const string consulConfigRegion = "consul";
         /// <summary>
@@ -15,7 +15,7 @@
 
         #region 服务配置
         /// <summary>
-        /// 服务配置前缀
+        /// 服务 配置Region
         /// </summary>
         public const string serviceConfigRegion = "service";
         #endregion

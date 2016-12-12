@@ -40,13 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implement\ExceptionlessConfigurationProvider.cs" />
+    <Compile Include="FCPExceptionlessConfigurationConstants.cs" />
+    <Compile Include="Interfaces\IExceptionlessConfigurationProvider.cs" />
     <Compile Include="Models\ExceptionlessApiInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FCP.Configuration.Cluster\FCP.Configuration.Cluster.csproj">
-      <Project>{a1a21d53-a729-4bae-9e84-41fbd6ea5642}</Project>
-      <Name>FCP.Configuration.Cluster</Name>
+    <ProjectReference Include="..\FCP.Configuration.Core\FCP.Configuration.Core.csproj">
+      <Project>{F47E82AA-32DE-4E5E-B9AC-C958611D817B}</Project>
+      <Name>FCP.Configuration.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
