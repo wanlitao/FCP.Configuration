@@ -1,10 +1,15 @@
-﻿using System;
+﻿using FCP.Util;
+using System;
 using System.Threading.Tasks;
 
 namespace FCP.Configuration
 {
     public abstract class BaseDistributedConfigurationProvider : BaseConfigurationProvider<string>, IDistributedConfigurationProvider
     {
+        public BaseDistributedConfigurationProvider(ISerializer serializer)
+            : base(serializer)
+        { }
+
         #region Get
         public Task<TValue> GetAsync<TValue>(string name)
         {

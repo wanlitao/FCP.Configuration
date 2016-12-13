@@ -1,9 +1,32 @@
-﻿using System;
+﻿using FCP.Util;
+using System;
 
 namespace FCP.Configuration
 {
     public abstract class BaseConfigurationProvider<TName> : IConfigurationProvider<TName>
     {
+        private readonly ISerializer _serializer;
+
+        public BaseConfigurationProvider(ISerializer serializer)
+        {
+            if (serializer == null)
+                throw new ArgumentNullException(nameof(serializer));
+
+            _serializer = serializer;
+        }
+
+        #region Serialize
+        protected string ToStringValue<TValue>(TValue value)
+        {
+            return _serializer.SerializeString(value);
+        }
+
+        protected TValue FromStringValue<TValue>(string dataStr)
+        {
+            return _serializer.DeserializeString<TValue>(dataStr);
+        }
+        #endregion
+
         #region Get
         public TValue Get<TValue>(TName name)
         {
@@ -186,9 +209,15 @@ namespace FCP.Configuration
                 if (disposing)
                 {
                     // TODO: 释放托管状态(托管对象)。
+                    DisposeInternal();                    
                 }                
                 disposedValue = true;
             }
+        }
+
+        protected virtual void DisposeInternal()
+        {
+
         }
         
         ~BaseConfigurationProvider() {
