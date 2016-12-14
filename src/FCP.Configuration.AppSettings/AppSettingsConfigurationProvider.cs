@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Diagnostics;
 
 namespace FCP.Configuration.AppSettings
 {
@@ -29,6 +30,39 @@ namespace FCP.Configuration.AppSettings
                 throw new ArgumentNullException(nameof(region));
 
             return $"{region}::";
+        }
+
+        protected bool CheckNameExists(string name)
+        {
+            if (name.isNullOrEmpty())
+                throw new ArgumentNullException(nameof(name));
+
+            return ConfigurationManager.AppSettings.AllKeys.Contains(name);
+        }
+        #endregion
+
+        #region Modify
+        protected bool ModifyAppSettingsConfig(Action<AppSettingsSection> modifyAction)
+        {
+            if (modifyAction == null)
+                throw new ArgumentNullException(nameof(modifyAction));
+
+            try
+            {
+                var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+                modifyAction(config.AppSettings);
+
+                config.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(config.AppSettings.SectionInformation.Name);
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Trace.TraceError("modify appsettings error: {0}", ex);
+                return false;
+            }
         }
         #endregion
 
@@ -67,28 +101,58 @@ namespace FCP.Configuration.AppSettings
         #region Add
         protected override bool AddInternal<TValue>(ConfigEntry<string, TValue> entry)
         {
-            throw new NotImplementedException();
+            var fullName = GetEntryName(entry.Name, entry.Region);
+
+            if (CheckNameExists(fullName))
+                return false;
+
+            return ModifyAppSettingsConfig((appSettings) => appSettings.Settings.Add(fullName, ToStringValue(entry.Value)));
         }
         #endregion
 
         #region Update
         protected override bool UpdateInternal<TValue>(ConfigEntry<string, TValue> entry)
         {
-            throw new NotImplementedException();
+            var fullName = GetEntryName(entry.Name, entry.Region);
+
+            if (!CheckNameExists(fullName))
+                return false;
+
+            return ModifyAppSettingsConfig((appSettings) =>
+            {
+                appSettings.Settings[fullName].Value = ToStringValue(entry.Value);
+            });
         }
         #endregion
 
         #region AddOrUpdate
         protected override bool AddOrUpdateInternal<TValue>(ConfigEntry<string, TValue> entry)
         {
-            throw new NotImplementedException();
+            var fullName = GetEntryName(entry.Name, entry.Region);
+
+            return ModifyAppSettingsConfig((appSettings) =>
+            {
+                if (CheckNameExists(fullName))
+                {
+                    appSettings.Settings[fullName].Value = ToStringValue(entry.Value);
+                }
+                else
+                {
+                    appSettings.Settings.Add(fullName, ToStringValue(entry.Value));
+                }
+            });
         }
         #endregion
 
         #region Delete
         protected override bool DeleteInternal(string name, string region)
         {
-            throw new NotImplementedException();
+            var fullName = GetEntryName(name, region);
+
+            if (!CheckNameExists(fullName))
+                return false;
+
+            return ModifyAppSettingsConfig((appSettings) => appSettings.Settings.Remove(fullName));
         }
         #endregion
     }
