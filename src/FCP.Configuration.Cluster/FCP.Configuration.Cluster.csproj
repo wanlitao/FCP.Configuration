@@ -48,10 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FCP.Configuration.Consul\FCP.Configuration.Consul.csproj">
-      <Project>{10cc3b61-6ae6-4e1a-934b-358d1ff2d327}</Project>
-      <Name>FCP.Configuration.Consul</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FCP.Configuration.Core\FCP.Configuration.Core.csproj">
       <Project>{f47e82aa-32de-4e5e-b9ac-c958611d817b}</Project>
       <Name>FCP.Configuration.Core</Name>

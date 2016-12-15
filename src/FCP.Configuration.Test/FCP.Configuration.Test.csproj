@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSettingsConfigProviderTest.cs" />
     <Compile Include="Common\ConfigurationProviderTest.cs" />
     <Compile Include="ConsulConfigProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FCP.Configuration.AppSettings\FCP.Configuration.AppSettings.csproj">
+      <Project>{d07bbe3f-dbe8-4d46-a189-c14b5add766c}</Project>
+      <Name>FCP.Configuration.AppSettings</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FCP.Configuration.Consul\FCP.Configuration.Consul.csproj">
       <Project>{10cc3b61-6ae6-4e1a-934b-358d1ff2d327}</Project>
       <Name>FCP.Configuration.Consul</Name>

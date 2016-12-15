@@ -8,9 +8,15 @@ namespace FCP.Configuration.AppSettings
 {
     public class AppSettingsConfigurationProvider : BaseConfigurationProvider<string>
     {
+        #region 构造函数
+        public AppSettingsConfigurationProvider()
+            : this(SerializerFactory.JsonSerializer)
+        { }
+
         public AppSettingsConfigurationProvider(ISerializer serializer)
             : base(serializer)
         { }
+        #endregion
 
         #region Name
         protected string GetEntryName(string name, string region)
@@ -94,7 +100,9 @@ namespace FCP.Configuration.AppSettings
                 return allKeys;
 
             var regionPrefix = GetRegionPrefix(region);
-            return allKeys.Where(m => StringUtil.startsWith(m, regionPrefix)).ToArray();           
+            var startIndex = regionPrefix.Length;
+            return allKeys.Where(m => StringUtil.startsWith(m, regionPrefix))
+                .Select(m => m.Substring(startIndex)).ToArray();
         }
         #endregion
 
